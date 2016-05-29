@@ -3,29 +3,18 @@
 <head>
     <meta charset="utf-8">
     
-    <title>About | 無稽閣</title>
+    <title>Java中的Atomic | 無稽閣</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="The blog theme you may fall in love with, coming to Hexo. Preview
-InstallationInstall1$ git clone https://github.com/ppoffice/hexo-theme-icarus.git themes/icarus
-Icarus requires Hexo 3.0 and above.
-En">
-<meta property="og:type" content="website">
-<meta property="og:title" content="About">
-<meta property="og:url" content="http://www.iyu.io/about/index.html">
+    <meta name="description" content="JDK 5&amp;#x4E4B;&amp;#x524D;&amp;#x662F;&amp;#x9760;Synchronized&amp;#x6765;&amp;#x4FDD;&amp;#x8BC1;&amp;#x540C;&amp;#x6B65;&amp;#x64CD;&amp;#x4F5C;&amp;#x7684;&amp;#xFF0C;&amp;#x867D;&amp;#x7136;&amp;#x53EF;&amp;#x4EE5;&amp;#x786E;&amp;#x4FDD;&amp;#x6B63;&amp;#x786E;&amp;#x6027;&amp;#xFF0C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java中的Atomic">
+<meta property="og:url" content="http://www.iyu.io/2016/05/29/Java中的Atomic/index.html">
 <meta property="og:site_name" content="無稽閣">
-<meta property="og:description" content="The blog theme you may fall in love with, coming to Hexo. Preview
-InstallationInstall1$ git clone https://github.com/ppoffice/hexo-theme-icarus.git themes/icarus
-Icarus requires Hexo 3.0 and above.
-En">
-<meta property="og:image" content="http://ppoffice.github.io/hexo-theme-icarus/gallery/preview.jpg">
-<meta property="og:updated_time" content="2016-04-22T02:41:53.000Z">
+<meta property="og:description" content="JDK 5&amp;#x4E4B;&amp;#x524D;&amp;#x662F;&amp;#x9760;Synchronized&amp;#x6765;&amp;#x4FDD;&amp;#x8BC1;&amp;#x540C;&amp;#x6B65;&amp;#x64CD;&amp;#x4F5C;&amp;#x7684;&amp;#xFF0C;&amp;#x867D;&amp;#x7136;&amp;#x53EF;&amp;#x4EE5;&amp;#x786E;&amp;#x4FDD;&amp;#x6B63;&amp;#x786E;&amp;#x6027;&amp;#xFF0C">
+<meta property="og:updated_time" content="2016-05-29T02:58:54.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="About">
-<meta name="twitter:description" content="The blog theme you may fall in love with, coming to Hexo. Preview
-InstallationInstall1$ git clone https://github.com/ppoffice/hexo-theme-icarus.git themes/icarus
-Icarus requires Hexo 3.0 and above.
-En">
-<meta name="twitter:image" content="http://ppoffice.github.io/hexo-theme-icarus/gallery/preview.jpg">
+<meta name="twitter:title" content="Java中的Atomic">
+<meta name="twitter:description" content="JDK 5&amp;#x4E4B;&amp;#x524D;&amp;#x662F;&amp;#x9760;Synchronized&amp;#x6765;&amp;#x4FDD;&amp;#x8BC1;&amp;#x540C;&amp;#x6B65;&amp;#x64CD;&amp;#x4F5C;&amp;#x7684;&amp;#xFF0C;&amp;#x867D;&amp;#x7136;&amp;#x53EF;&amp;#x4EE5;&amp;#x786E;&amp;#x4FDD;&amp;#x6B63;&amp;#x786E;&amp;#x6027;&amp;#xFF0C">
     
 
     
@@ -192,7 +181,7 @@ En">
 </aside>
 
             
-            <section id="main"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-Java中的Atomic" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -201,7 +190,7 @@ En">
                 
     
         <h1 class="article-title" itemprop="name">
-            About
+            Java中的Atomic
         </h1>
     
 
@@ -209,81 +198,44 @@ En">
                     
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/about/index.html">
-            <time datetime="2016-04-22T03:59:15.000Z" itemprop="datePublished">2016-04-22</time>
+        <a href="/2016/05/29/Java中的Atomic/">
+            <time datetime="2016-05-29T02:33:31.000Z" itemprop="datePublished">2016-05-29</time>
         </a>
     </div>
 
 
                     
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/Java-Concurrency/">Java Concurrency</a>
+    </div>
+
                     
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Java-Concurrency/">Java Concurrency</a>
+    </div>
+
                 </div>
             </header>
         
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h3 id="The-blog-theme-you-may-fall-in-love-with-coming-to-Hexo-Preview"><a href="#The-blog-theme-you-may-fall-in-love-with-coming-to-Hexo-Preview" class="headerlink" title="The blog theme you may fall in love with, coming to Hexo. Preview"></a>The blog theme you may fall in love with, coming to Hexo. <a href="http://ppoffice.github.io/hexo-theme-icarus/" target="_blank" rel="external">Preview</a></h3><p><img src="http://ppoffice.github.io/hexo-theme-icarus/gallery/preview.jpg" alt=""></p>
-<h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><h3 id="Install"><a href="#Install" class="headerlink" title="Install"></a>Install</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/ppoffice/hexo-theme-icarus.git themes/icarus</span><br></pre></td></tr></table></figure>
-<p><strong>Icarus requires Hexo 3.0 and above.</strong></p>
-<h3 id="Enable"><a href="#Enable" class="headerlink" title="Enable"></a>Enable</h3><ol>
-<li>Rename <code>themes\icarus\_config.yml.example</code> to <code>themes\icarus\_config.yml</code>;</li>
-<li>Copy <code>themes\icarus\_config.yml.site.example</code> to your hexo blog&#x2019;s root directory and rename it to <code>_config.yml</code>;</li>
-<li>Copy <code>themes\icarus\_source\*</code> into your hexo blog&#x2019;s directory <code>source</code>;</li>
-<li>Then modify <code>theme</code> setting in <code>_config.yml</code> to <code>icarus</code>.</li>
+            <p>JDK 5&#x4E4B;&#x524D;&#x662F;&#x9760;Synchronized&#x6765;&#x4FDD;&#x8BC1;&#x540C;&#x6B65;&#x64CD;&#x4F5C;&#x7684;&#xFF0C;&#x867D;&#x7136;&#x53EF;&#x4EE5;&#x786E;&#x4FDD;&#x6B63;&#x786E;&#x6027;&#xFF0C;&#x4F46;&#x4E5F;&#x5E26;&#x6765;&#x4E86;&#x95EE;&#x9898;&#x3002;</p>
+<ol>
+<li>&#x9AD8;&#x5E76;&#x53D1;&#x4E0B;&#x541E;&#x5410;&#x91CF;&#x5927;&#x91CF;&#x4E0B;&#x964D;&#x3002;</li>
+<li>&#x4E0A;&#x4E0B;&#x6587;&#x5207;&#x6362;&#x8017;&#x8D39;&#x5927;&#x91CF;&#x8D44;&#x6E90;&#x3002;</li>
+<li>&#x53EF;&#x80FD;&#x4F1A;&#x9020;&#x6210;&#x6B7B;&#x9501;&#x3002;</li>
 </ol>
-<h3 id="Update"><a href="#Update" class="headerlink" title="Update"></a>Update</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> themes/icarus</span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
-<h2 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h2><h3 id="Theme-configuration-example"><a href="#Theme-configuration-example" class="headerlink" title="Theme configuration example"></a>Theme configuration example</h3><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Header</span></span><br><span class="line">menu:</span><br><span class="line">  Home: .</span><br><span class="line">  Archives: archives</span><br><span class="line">  Categories: categories <span class="comment"># you need to add extra page to enable this, please see the config below.</span></span><br><span class="line">  Tags: tags             <span class="comment"># you need to add extra page to enable this, please see the config below.</span></span><br><span class="line">  About: about</span><br><span class="line"></span><br><span class="line"><span class="comment"># Content</span></span><br><span class="line">excerpt_link: Read More</span><br><span class="line">fancybox: true</span><br><span class="line"></span><br><span class="line"><span class="comment"># Sidebar</span></span><br><span class="line">sidebar: right</span><br><span class="line">widgets:</span><br><span class="line">- recent_posts</span><br><span class="line">- category</span><br><span class="line">- tag</span><br><span class="line">- tagcloud</span><br><span class="line">- archive</span><br><span class="line">thumbnail: true</span><br><span class="line"></span><br><span class="line"><span class="comment"># Contacts</span></span><br><span class="line">contacts:</span><br><span class="line">  github: http://github.com/ppoffice/hexo-theme-icarus</span><br><span class="line">  twitter: <span class="string">&apos;#&apos;</span></span><br><span class="line">  facebook: <span class="string">&apos;#&apos;</span></span><br><span class="line">  dribbble: <span class="string">&apos;#&apos;</span></span><br><span class="line">  rss: atom.xml</span><br><span class="line"></span><br><span class="line"><span class="comment"># Links</span></span><br><span class="line">links:</span><br><span class="line">  Hexo: http://hexo.io</span><br><span class="line"></span><br><span class="line"><span class="comment"># Miscellaneous</span></span><br><span class="line">google_analytics:</span><br><span class="line">favicon: favicon.png</span><br><span class="line">twitter:</span><br><span class="line">google_plus:</span><br><span class="line">fb_admins:</span><br><span class="line">fb_app_id:</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>excerpt_link</strong> - Cooperate with <code>&lt;!-- more --&gt;</code> tag to show only part of the article in index pages.</li>
-<li><strong>fancybox</strong> - Enable <a href="http://fancyapps.com/fancybox/" target="_blank" rel="external">Fancybox</a>.</li>
-<li><strong>contacts</strong> - Your social network links, RSS link, etc.</li>
-<li><strong>widgets</strong> - Widgets displaying in sidebar.</li>
-<li><strong>thumbnail</strong> - Whether to show post thumbnails in the sidebar and archive pages.</li>
-<li><strong>links</strong> - Links displayed in the link widget.</li>
-<li><strong>google_analytics</strong> - Google Analytics ID.</li>
-<li><strong>favicon</strong> - Favicon path.</li>
-</ul>
-<h3 id="Site-configuration-example"><a href="#Site-configuration-example" class="headerlink" title="Site configuration example"></a>Site configuration example</h3><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Site</span></span><br><span class="line">title: Icarus</span><br><span class="line">subtitle:</span><br><span class="line">description: Hexo theme - Icarus</span><br><span class="line">author: PPOffice</span><br><span class="line">author_title: <span class="string">&apos;Web Developer &amp; Designer&apos;</span></span><br><span class="line">avatar: css/images/avatar.png</span><br><span class="line">location: <span class="string">&apos;Harbin, China&apos;</span></span><br><span class="line">language: en</span><br><span class="line">timezone:</span><br><span class="line"></span><br><span class="line"><span class="keyword">...</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Disqus</span></span><br><span class="line">disqus_shortname:</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>author</strong> - Your name.</li>
-<li><strong>author_title</strong> - Title to your occupation.</li>
-<li><strong>avatar</strong> - Your avatar image link.</li>
-<li><strong>location</strong> - Where you live in.</li>
-<li><strong>disqus_shortname</strong> - Your Disqus shortname.</li>
-</ul>
-<h3 id="Post-Thumbnail-amp-Banner"><a href="#Post-Thumbnail-amp-Banner" class="headerlink" title="Post Thumbnail &amp; Banner"></a>Post Thumbnail &amp; Banner</h3><p>You can add a thumbnail and a banner to each post by adding the following lines into your post source files&#x2019; front-matter:<br><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">title: Demo</span><br><span class="line">date: <span class="number">2015</span>-<span class="number">01</span>-<span class="number">01</span></span><br><span class="line"><span class="keyword">...</span></span><br><span class="line"><span class="comment"># add those</span></span><br><span class="line">thumbnail: http://example.com/thumbnail.jpg</span><br><span class="line">banner: http://example.com/banner.jpg</span><br></pre></td></tr></table></figure></p>
-<h3 id="Custom-Categories-amp-Tags-Pages"><a href="#Custom-Categories-amp-Tags-Pages" class="headerlink" title="Custom Categories &amp; Tags Pages"></a>Custom Categories &amp; Tags Pages</h3><p>To enable custom categories page and tags page, just copy the <code>categories</code> folder and <code>tags</code> folder under your theme&#x2019;s <code>_source</code> foler into your site&#x2019;s <code>source</code> folder. Then edit theme&#x2019;s _config.yml and add the following lines:<br><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Header</span></span><br><span class="line">menu:</span><br><span class="line">  <span class="keyword">...</span></span><br><span class="line">  Categories: categories <span class="comment"># -&gt; add this line</span></span><br><span class="line">  Tags: tags <span class="comment"># -&gt; and add this line</span></span><br><span class="line">  <span class="keyword">...</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="Languages"><a href="#Languages" class="headerlink" title="Languages"></a>Languages</h3><p>English and Simplified Chinese are the default languages of the theme. You can add translations in the <code>languages</code> folder and change the default language in blog&#x2019;s <code>_config.yml</code>.</p>
-<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">language: zh-CN</span><br></pre></td></tr></table></figure>
-<h2 id="Features"><a href="#Features" class="headerlink" title="Features"></a>Features</h2><h3 id="Profile-Sidebar"><a href="#Profile-Sidebar" class="headerlink" title="Profile Sidebar"></a>Profile Sidebar</h3><p>A nice place to show yourself. You can add your own information in your site&#x2019;s <code>_config.yml</code></p>
-<p><img src="http://ppoffice.github.io/hexo-theme-icarus/gallery/profile.png" alt=""></p>
-<h3 id="Post-Banner-amp-Thumbnail"><a href="#Post-Banner-amp-Thumbnail" class="headerlink" title="Post Banner &amp; Thumbnail"></a>Post Banner &amp; Thumbnail</h3><p>Thanks to <a href="https://github.com/atika" target="_blank" rel="external">atika</a>, you can now add thumbnails and banners to every post to create better reading experience.</p>
-<h3 id="Responsive-Layout"><a href="#Responsive-Layout" class="headerlink" title="Responsive Layout"></a>Responsive Layout</h3><p>Icarus knows on what screen size you are browsering the website, and reorganize the layout to fit your device.</p>
-<p><img src="http://ppoffice.github.io/hexo-theme-icarus/gallery/responsive.jpg" alt=""></p>
-<h3 id="Custom-Categories-amp-Tags-Pages-1"><a href="#Custom-Categories-amp-Tags-Pages-1" class="headerlink" title="Custom Categories &amp; Tags Pages"></a>Custom Categories &amp; Tags Pages</h3><p>Get your categories and tags listed in single pages to make your blog more methodic.</p>
-<h3 id="Fancybox"><a href="#Fancybox" class="headerlink" title="Fancybox"></a>Fancybox</h3><p>Icarus uses <a href="http://fancyapps.com/fancybox/" target="_blank" rel="external">Fancybox</a> to showcase your photos. You can use Markdown syntax or fancybox tag plugin to add your photos.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![img caption](img url)</span><br></pre></td></tr></table></figure>
-<h3 id="Sidebar"><a href="#Sidebar" class="headerlink" title="Sidebar"></a>Sidebar</h3><p>Icarus provides 6 built-in widgets:</p>
-<ul>
-<li>recent_posts</li>
-<li>category</li>
-<li>archives</li>
-<li>tag</li>
-<li>tagcloud</li>
-<li>links</li>
-</ul>
-<p>All of them are enabled by default. You can edit them in <code>widget</code> setting.</p>
-<h2 id="Development"><a href="#Development" class="headerlink" title="Development"></a>Development</h2><h3 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h3><ul>
-<li><a href="http://gruntjs.com/" target="_blank" rel="external">Grunt</a> 0.4+</li>
-<li>Hexo 3.0+</li>
-</ul>
-<h3 id="Grunt-tasks"><a href="#Grunt-tasks" class="headerlink" title="Grunt tasks"></a>Grunt tasks</h3><ul>
-<li><strong>default</strong> - Download <a href="http://fancyapps.com/fancybox/" target="_blank" rel="external">Fancybox</a> and <a href="http://fontawesome.io/" target="_blank" rel="external">Font Awesome</a>.</li>
-<li><strong>fontawesome</strong> - Only download <a href="http://fontawesome.io/" target="_blank" rel="external">Font Awesome</a>.</li>
-<li><strong>fancybox</strong> - Only download <a href="http://fancyapps.com/fancybox/" target="_blank" rel="external">Fancybox</a>.</li>
-<li><strong>clean</strong> - Clean temporarily files and downloaded files.</li>
-</ul>
+<p>JDK 5&#x5229;&#x7528;&#x4E86;&#x73B0;&#x4EE3;&#x5904;&#x7406;&#x5668;&#x7684;CAS(compare and set)&#x539F;&#x8BED;&#x89E3;&#x51B3;&#x4E86;&#x8FD9;&#x4E2A;&#x95EE;&#x9898;&#x3002;</p>
+<blockquote>
+<p>CAS &#x64CD;&#x4F5C;&#x5305;&#x542B;&#x4E09;&#x4E2A;&#x64CD;&#x4F5C;&#x6570; &#x2014;&#x2014; &#x5185;&#x5B58;&#x4F4D;&#x7F6E;&#xFF08;V&#xFF09;&#x3001;&#x9884;&#x671F;&#x539F;&#x503C;&#xFF08;A&#xFF09;&#x548C;&#x65B0;&#x503C;(B)&#x3002;&#x5982;&#x679C;&#x5185;&#x5B58;&#x4F4D;&#x7F6E;&#x7684;&#x503C;&#x4E0E;&#x9884;&#x671F;&#x539F;&#x503C;&#x76F8;&#x5339;&#x914D;&#xFF0C;&#x90A3;&#x4E48;&#x5904;&#x7406;&#x5668;&#x4F1A;&#x81EA;&#x52A8;&#x5C06;&#x8BE5;&#x4F4D;&#x7F6E;&#x503C;&#x66F4;&#x65B0;&#x4E3A;&#x65B0;&#x503C;&#x3002;&#x5426;&#x5219;&#xFF0C;&#x5904;&#x7406;&#x5668;&#x4E0D;&#x505A;&#x4EFB;&#x4F55;&#x64CD;&#x4F5C;&#x3002;&#x65E0;&#x8BBA;&#x54EA;&#x79CD;&#x60C5;&#x51B5;&#xFF0C;&#x5B83;&#x90FD;&#x4F1A;&#x5728; CAS &#x6307;&#x4EE4;&#x4E4B;&#x524D;&#x8FD4;&#x56DE;&#x8BE5;&#x4F4D;&#x7F6E;&#x7684;&#x503C;&#x3002;&#xFF08;&#x5728; CAS &#x7684;&#x4E00;&#x4E9B;&#x7279;&#x6B8A;&#x60C5;&#x51B5;&#x4E0B;&#x5C06;&#x4EC5;&#x8FD4;&#x56DE; CAS &#x662F;&#x5426;&#x6210;&#x529F;&#xFF0C;&#x800C;&#x4E0D;&#x63D0;&#x53D6;&#x5F53;&#x524D;&#x503C;&#x3002;&#xFF09;CAS &#x6709;&#x6548;&#x5730;&#x8BF4;&#x660E;&#x4E86;&#x201C;&#x6211;&#x8BA4;&#x4E3A;&#x4F4D;&#x7F6E; V &#x5E94;&#x8BE5;&#x5305;&#x542B;&#x503C; A&#xFF1B;&#x5982;&#x679C;&#x5305;&#x542B;&#x8BE5;&#x503C;&#xFF0C;&#x5219;&#x5C06; B &#x653E;&#x5230;&#x8FD9;&#x4E2A;&#x4F4D;&#x7F6E;&#xFF1B;&#x5426;&#x5219;&#xFF0C;&#x4E0D;&#x8981;&#x66F4;&#x6539;&#x8BE5;&#x4F4D;&#x7F6E;&#xFF0C;&#x53EA;&#x544A;&#x8BC9;&#x6211;&#x8FD9;&#x4E2A;&#x4F4D;&#x7F6E;&#x73B0;&#x5728;&#x7684;&#x503C;&#x5373;&#x53EF;&#x3002;&#x201D;<br>&#x901A;&#x5E38;&#x5C06; CAS &#x7528;&#x4E8E;&#x540C;&#x6B65;&#x7684;&#x65B9;&#x5F0F;&#x662F;&#x4ECE;&#x5730;&#x5740; V &#x8BFB;&#x53D6;&#x503C; A&#xFF0C;&#x6267;&#x884C;&#x591A;&#x6B65;&#x8BA1;&#x7B97;&#x6765;&#x83B7;&#x5F97;&#x65B0;&#x503C; B&#xFF0C;&#x7136;&#x540E;&#x4F7F;&#x7528; CAS &#x5C06; V &#x7684;&#x503C;&#x4ECE; A &#x6539;&#x4E3A; B&#x3002;&#x5982;&#x679C; V &#x5904;&#x7684;&#x503C;&#x5C1A;&#x672A;&#x540C;&#x65F6;&#x66F4;&#x6539;&#xFF0C;&#x5219; CAS &#x64CD;&#x4F5C;&#x6210;&#x529F;&#x3002;<br>&#x7C7B;&#x4F3C;&#x4E8E; CAS &#x7684;&#x6307;&#x4EE4;&#x5141;&#x8BB8;&#x7B97;&#x6CD5;&#x6267;&#x884C;&#x8BFB;-&#x4FEE;&#x6539;-&#x5199;&#x64CD;&#x4F5C;&#xFF0C;&#x800C;&#x65E0;&#x9700;&#x5BB3;&#x6015;&#x5176;&#x4ED6;&#x7EBF;&#x7A0B;&#x540C;&#x65F6;&#x4FEE;&#x6539;&#x53D8;&#x91CF;&#xFF0C;&#x56E0;&#x4E3A;&#x5982;&#x679C;&#x5176;&#x4ED6;&#x7EBF;&#x7A0B;&#x4FEE;&#x6539;&#x53D8;&#x91CF;&#xFF0C;&#x90A3;&#x4E48; CAS &#x4F1A;&#x68C0;&#x6D4B;&#x5B83;&#xFF08;&#x5E76;&#x5931;&#x8D25;&#xFF09;&#xFF0C;&#x7B97;&#x6CD5;&#x53EF;&#x4EE5;&#x5BF9;&#x8BE5;&#x64CD;&#x4F5C;&#x91CD;&#x65B0;&#x8BA1;&#x7B97;&#x3002;&#x6E05;&#x5355; 3 &#x8BF4;&#x660E;&#x4E86; CAS &#x64CD;&#x4F5C;&#x7684;&#x884C;&#x4E3A;&#xFF08;&#x800C;&#x4E0D;&#x662F;&#x6027;&#x80FD;&#x7279;&#x5F81;&#xFF09;&#xFF0C;&#x4F46;&#x662F; CAS &#x7684;&#x4EF7;&#x503C;&#x662F;&#x5B83;&#x53EF;&#x4EE5;&#x5728;&#x786C;&#x4EF6;&#x4E2D;&#x5B9E;&#x73B0;&#xFF0C;&#x5E76;&#x4E14;&#x662F;&#x6781;&#x8F7B;&#x91CF;&#x7EA7;&#x7684;&#xFF08;&#x5728;&#x5927;&#x591A;&#x6570;&#x5904;&#x7406;&#x5668;&#x4E2D;&#xFF09;&#xFF1A;</p>
+</blockquote>
+<p>&#x4E0B;&#x9762;&#x6211;&#x4EEC;&#x6765;&#x770B;&#x770B;AtomicInteger&#x5982;&#x4F55;&#x6765;&#x5B9E;&#x73B0;&#x7684;&#x3002;</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAndSet</span><span class="params">(<span class="keyword">int</span> newValue)</span> </span>{</span><br><span class="line">	<span class="comment">//&#x5FAA;&#x73AF;&#x68C0;&#x6D4B;&#x662F;&#x5426;&#x8BBE;&#x7F6E;&#x6210;&#x529F;</span></span><br><span class="line">        <span class="keyword">for</span> (;;) {</span><br><span class="line">            <span class="keyword">int</span> current = get();</span><br><span class="line">		<span class="comment">//&#x8FD4;&#x56DE;true&#x5982;&#x679C;&#x5185;&#x5B58;&#x4E2D;&#x503C;&#x548C;current&#x76F8;&#x540C;&#x5E76;&#x8BBE;&#x5B9A;&#x6210;newValue</span></span><br><span class="line">            <span class="keyword">if</span> (compareAndSet(current, newValue))</span><br><span class="line">                <span class="keyword">return</span> current;</span><br><span class="line">        }</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+<p>&#x63A5;&#x4E0B;&#x6765;&#x6765;&#x770B;compareAndSet&#x5982;&#x4F55;&#x5B9E;&#x73B0;<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">compareAndSet</span><span class="params">(<span class="keyword">int</span> expect, <span class="keyword">int</span> update)</span> </span>{</span><br><span class="line">	<span class="comment">//&#x8FD9;&#x91CC;&#x8C03;&#x7528;&#x4E86;unsafe&#x7684;compareAndSwapInt&#x65B9;&#x6CD5;</span></span><br><span class="line">        <span class="keyword">return</span> unsafe.compareAndSwapInt(<span class="keyword">this</span>, valueOffset, expect, update);</span><br><span class="line">    }</span><br></pre></td></tr></table></figure></p>
+<p>unsafe&#x7684;compareAndSwapInt&#x901A;&#x8FC7;JNI&#x8C03;&#x7528;&#x4E86;&#x5E95;&#x5C42;C&#x5B9E;&#x73B0;&#x3002;<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">compareAndSwapInt</span><span class="params">(Object var1, <span class="keyword">long</span> var2, <span class="keyword">int</span> var4, <span class="keyword">int</span> var5)</span></span>;</span><br></pre></td></tr></table></figure></p>
 
         
         </div>
@@ -294,7 +246,7 @@ En">
 
 </div>
 
-    <a data-url="http://www.iyu.io/about/index.html" data-id="ciorzh90o0002790xsqtqebcq" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://www.iyu.io/2016/05/29/Java中的Atomic/" data-id="ciorzl2xj00007s0xvo40a9s7" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -362,13 +314,23 @@ En">
 
             
     
-        <a href="/about/index.html#comments" class="article-comment-link disqus-comment-count" data-disqus-url="/about/index.html">Comments</a>
+        <a href="/2016/05/29/Java中的Atomic/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="/2016/05/29/Java中的Atomic/">Comments</a>
     
 
         </footer>
     </div>
     
         
+<nav id="article-nav">
+    
+    
+        <a href="/2016/05/25/运行tomcat7源代码（Tomcat源代码学习之一）/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">运行tomcat7源代码（Tomcat源代码学习之一）</div>
+        </a>
+    
+</nav>
+
 
     
 </article>
@@ -546,7 +508,7 @@ En">
     var disqus_shortname = 'iyuli';
     
     
-    var disqus_url = 'http://www.iyu.io/about/index.html';
+    var disqus_url = 'http://www.iyu.io/2016/05/29/Java中的Atomic/';
     
     (function() {
     var dsq = document.createElement('script');
