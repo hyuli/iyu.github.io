@@ -3,20 +3,18 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Lock中的各种lock方法 | 無稽閣</title>
+    <title>CountDownLatch的实现分析 | 無稽閣</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="&amp;#x5982;&amp;#x56FE;&amp;#xFF0C;&amp;#x5728;Lock&amp;#x7C7B;&amp;#x4E2D;&amp;#x6709;&amp;#x8FD9;&amp;#x4E48;&amp;#x591A;lock&amp;#x65B9;&amp;#x6CD5;&amp;#xFF0C;&amp;#x4ED6;&amp;#x4EEC;&amp;#x5206;&amp;#x522B;&amp;#x6709;&amp;#x4EC0;&amp;#x4E48;&amp;#x533A;&amp;#x522B;&amp;#x5462;&amp;#x3002;">
+    <meta name="description" content="&amp;#x6709;&amp;#x4E86;&amp;#x4E0A;&amp;#x7BC7;&amp;#x6587;&amp;#x7AE0;&amp;#x7684;&amp;#x5206;&amp;#x6790;&amp;#xFF0C;&amp;#x6211;&amp;#x4EEC;&amp;#x5927;&amp;#x6982;&amp;#x53EF;&amp;#x4EE5;&amp;#x731C;&amp;#x60F3;CountDownLatch&amp;#x662F;&amp;#x5982;&amp;#x4F55;&amp;#x5B9E;&amp;#x73B0;&amp;#">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Lock中的各种lock方法">
-<meta property="og:url" content="http://www.iyu.io/2016/05/29/Lock中的各种lock方法/index.html">
+<meta property="og:title" content="CountDownLatch的实现分析">
+<meta property="og:url" content="http://www.iyu.io/2016/05/29/CountDownLatch的实现分析/index.html">
 <meta property="og:site_name" content="無稽閣">
-<meta property="og:description" content="&amp;#x5982;&amp;#x56FE;&amp;#xFF0C;&amp;#x5728;Lock&amp;#x7C7B;&amp;#x4E2D;&amp;#x6709;&amp;#x8FD9;&amp;#x4E48;&amp;#x591A;lock&amp;#x65B9;&amp;#x6CD5;&amp;#xFF0C;&amp;#x4ED6;&amp;#x4EEC;&amp;#x5206;&amp;#x522B;&amp;#x6709;&amp;#x4EC0;&amp;#x4E48;&amp;#x533A;&amp;#x522B;&amp;#x5462;&amp;#x3002;">
-<meta property="og:image" content="http://www.iyu.io/2016/05/29/Lock&#x4E2D;&#x7684;&#x5404;&#x79CD;lock&#x65B9;&#x6CD5;/LockMethods.png">
-<meta property="og:updated_time" content="2016-05-29T07:45:12.000Z">
+<meta property="og:description" content="&amp;#x6709;&amp;#x4E86;&amp;#x4E0A;&amp;#x7BC7;&amp;#x6587;&amp;#x7AE0;&amp;#x7684;&amp;#x5206;&amp;#x6790;&amp;#xFF0C;&amp;#x6211;&amp;#x4EEC;&amp;#x5927;&amp;#x6982;&amp;#x53EF;&amp;#x4EE5;&amp;#x731C;&amp;#x60F3;CountDownLatch&amp;#x662F;&amp;#x5982;&amp;#x4F55;&amp;#x5B9E;&amp;#x73B0;&amp;#">
+<meta property="og:updated_time" content="2016-05-29T10:40:47.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Lock中的各种lock方法">
-<meta name="twitter:description" content="&amp;#x5982;&amp;#x56FE;&amp;#xFF0C;&amp;#x5728;Lock&amp;#x7C7B;&amp;#x4E2D;&amp;#x6709;&amp;#x8FD9;&amp;#x4E48;&amp;#x591A;lock&amp;#x65B9;&amp;#x6CD5;&amp;#xFF0C;&amp;#x4ED6;&amp;#x4EEC;&amp;#x5206;&amp;#x522B;&amp;#x6709;&amp;#x4EC0;&amp;#x4E48;&amp;#x533A;&amp;#x522B;&amp;#x5462;&amp;#x3002;">
-<meta name="twitter:image" content="http://www.iyu.io/2016/05/29/Lock&#x4E2D;&#x7684;&#x5404;&#x79CD;lock&#x65B9;&#x6CD5;/LockMethods.png">
+<meta name="twitter:title" content="CountDownLatch的实现分析">
+<meta name="twitter:description" content="&amp;#x6709;&amp;#x4E86;&amp;#x4E0A;&amp;#x7BC7;&amp;#x6587;&amp;#x7AE0;&amp;#x7684;&amp;#x5206;&amp;#x6790;&amp;#xFF0C;&amp;#x6211;&amp;#x4EEC;&amp;#x5927;&amp;#x6982;&amp;#x53EF;&amp;#x4EE5;&amp;#x731C;&amp;#x60F3;CountDownLatch&amp;#x662F;&amp;#x5982;&amp;#x4F55;&amp;#x5B9E;&amp;#x73B0;&amp;#">
     
 
     
@@ -183,7 +181,7 @@
 </aside>
 
             
-            <section id="main"><article id="post-Lock中的各种lock方法" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-CountDownLatch的实现分析" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -192,7 +190,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            Lock中的各种lock方法
+            CountDownLatch的实现分析
         </h1>
     
 
@@ -200,8 +198,8 @@
                     
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2016/05/29/Lock中的各种lock方法/">
-            <time datetime="2016-05-29T07:00:33.000Z" itemprop="datePublished">2016-05-29</time>
+        <a href="/2016/05/29/CountDownLatch的实现分析/">
+            <time datetime="2016-05-29T10:03:51.000Z" itemprop="datePublished">2016-05-29</time>
         </a>
     </div>
 
@@ -224,19 +222,21 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p><img src="/2016/05/29/Lock&#x4E2D;&#x7684;&#x5404;&#x79CD;lock&#x65B9;&#x6CD5;/LockMethods.png" alt="Lock Methods"><br>&#x5982;&#x56FE;&#xFF0C;&#x5728;Lock&#x7C7B;&#x4E2D;&#x6709;&#x8FD9;&#x4E48;&#x591A;lock&#x65B9;&#x6CD5;&#xFF0C;&#x4ED6;&#x4EEC;&#x5206;&#x522B;&#x6709;&#x4EC0;&#x4E48;&#x533A;&#x522B;&#x5462;&#x3002;</p>
+            <p>&#x6709;&#x4E86;&#x4E0A;&#x7BC7;&#x6587;&#x7AE0;&#x7684;&#x5206;&#x6790;&#xFF0C;&#x6211;&#x4EEC;&#x5927;&#x6982;&#x53EF;&#x4EE5;&#x731C;&#x60F3;CountDownLatch&#x662F;&#x5982;&#x4F55;&#x5B9E;&#x73B0;&#x7684;&#x3002;</p>
 <ol>
-<li>lock(), &#x6BD4;&#x8F83;&#x6D41;&#x6C13;&#x7684;&#x65B9;&#x5F0F;&#xFF0C;&#x4E00;&#x76F4;&#x5C1D;&#x8BD5;&#x53BB;&#x83B7;&#x53D6;&#x9501;&#xFF0C;&#x4E0D;&#x54CD;&#x5E94;interrupt().</li>
-<li>tryLock(), &#x9A6C;&#x4E0A;&#x8FD4;&#x56DE;&#xFF0C;&#x62FF;&#x5230;&#x9501;&#x5C31;&#x8FD4;&#x56DE;true&#xFF0C;&#x5426;&#x5219;false&#x3002;</li>
-<li>tryLock(long time, TimeUnit unit)&#xFF0C;&#x6BD4;&#x8F83;&#x806A;&#x660E;&#x7684;&#x65B9;&#x5F0F;&#xFF0C;&#x4F1A;&#x7B49;&#x5F85;&#x4E00;&#x6BB5;&#x65F6;&#x95F4;&#xFF0C;&#x8D85;&#x65F6;&#x5C31;&#x8FD4;&#x56DE;false&#x3002;</li>
-<li>lockInterruptibly(), &#x5982;&#x679C;&#x7EBF;&#x7A0B;&#x963B;&#x585E;&#x65F6;&#xFF0C;&#x6536;&#x5230;interrupt&#x4F1A;&#x88AB;&#x5524;&#x9192;&#x5E76;&#x8981;&#x6C42;&#x53BB;&#x5904;&#x7406;interrupt exception.</li>
+<li>&#x9996;&#x5148;&#x770B;&#x6784;&#x9020;&#x51FD;&#x6570; <code>public CountDownLatch(int count)</code>, &#x8FD9;&#x91CC;count&#x4F1A;&#x8BBE;&#x5230;AQS&#x7684;state&#x4E0A;&#x3002;</li>
+<li>&#x7136;&#x540E;&#x5C31;&#x662F;<code>public void countDown()</code>, &#x4F1A;&#x628A;state - 1&#xFF0C;&#x4ECE;&#x4E0A;&#x7BC7;&#x6587;&#x7AE0;&#x4E2D;&#x5F97;&#x77E5;&#xFF0C;state&#x4E0D;&#x5230;0&#x7684;&#x8BDD;&#x9501;&#x4E0D;&#x4F1A;&#x88AB;&#x91CA;&#x653E;&#x3002;</li>
+<li>&#x6700;&#x540E;&#x662F;<code>public void await()</code>&#xFF0C;&#x8C03;&#x7528;&#x8FD9;&#x4E2A;&#x51FD;&#x6570;&#x4F1A;&#x963B;&#x585E;&#x5F53;&#x524D;&#x8FDB;&#x7A0B;&#xFF0C;&#x731C;&#x60F3;&#x5176;&#x5E94;&#x8BE5;&#x662F;park&#x6765;&#x5B9E;&#x73B0;&#x7684;&#x3002;</li>
 </ol>
-<p>&#x4E0B;&#x9762;&#x5BF9;lock()&#x548C;lockInterruptibly()&#x4F5C;&#x4EE5;&#x4E0B;&#x6D4B;&#x8BD5;&#x3002;</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestInterrupt</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">        <span class="keyword">final</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">        lock.lock();</span><br><span class="line"></span><br><span class="line">        Thread thd = <span class="keyword">new</span> Thread(</span><br><span class="line">                <span class="keyword">new</span> Runnable() {</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">                            System.out.println(<span class="string">&quot;About to lock&quot;</span>);</span><br><span class="line">                            lock.lock();</span><br><span class="line">                            System.out.println(<span class="string">&quot;lock aquired&quot;</span>);</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">        , <span class="string">&quot;thread-interrupt&quot;</span>);</span><br><span class="line"></span><br><span class="line">        thd.start();</span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">        thd.interrupt();</span><br><span class="line">        Thread.sleep(<span class="number">234234234</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
-<p>&#x901A;&#x8FC7;jstack&#x89C2;&#x5BDF;<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;thread-interrupt&quot;</span> prio=<span class="number">5</span> tid=<span class="number">0x00007fc9898db800</span> nid=<span class="number">0x4d03</span> waiting on condition [<span class="number">0x0000700001149000</span>]</span><br><span class="line">   java.lang.Thread.State: WAITING (parking)</span><br><span class="line">        at sun.misc.Unsafe.park(Native Method)</span><br><span class="line">        - parking to wait <span class="keyword">for</span>  &lt;<span class="number">0x00000007d5660778</span>&gt; (a java.util.concurrent.locks.ReentrantLock$NonfairSync)</span><br><span class="line">        at java.util.concurrent.locks.LockSupport.park(LockSupport.java:<span class="number">186</span>)</span><br><span class="line">        at java.util.concurrent.locks.AbstractQueuedSynchronizer.parkAndCheckInterrupt(AbstractQueuedSynchronizer.java:<span class="number">834</span>)</span><br><span class="line">        at java.util.concurrent.locks.AbstractQueuedSynchronizer.acquireQueued(AbstractQueuedSynchronizer.java:<span class="number">867</span>)</span><br><span class="line">        at java.util.concurrent.locks.AbstractQueuedSynchronizer.acquire(AbstractQueuedSynchronizer.java:<span class="number">1197</span>)</span><br><span class="line">        at java.util.concurrent.locks.ReentrantLock$NonfairSync.lock(ReentrantLock.java:<span class="number">214</span>)</span><br><span class="line">        at java.util.concurrent.locks.ReentrantLock.lock(ReentrantLock.java:<span class="number">290</span>)</span><br><span class="line">        at com.ulu.io.TestInterrupt$<span class="number">1</span>.run(TestInterrupt.java:<span class="number">21</span>)</span><br><span class="line">        at java.lang.Thread.run(Thread.java:<span class="number">745</span>)</span><br></pre></td></tr></table></figure></p>
-<p>&#x8F93;&#x51FA;&#x5982;&#x4E0B;:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">About to lock</span><br></pre></td></tr></table></figure></p>
-<p>&#x5C06;lock&#x6362;&#x6210;lockInterruptibly&#x540E;:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestInterrupt</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">        <span class="keyword">final</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">        lock.lock();</span><br><span class="line"></span><br><span class="line">        Thread thd = <span class="keyword">new</span> Thread(</span><br><span class="line">                <span class="keyword">new</span> Runnable() {</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">                            System.out.println(<span class="string">&quot;About to lock&quot;</span>);</span><br><span class="line">                        <span class="keyword">try</span> {</span><br><span class="line">                            lock.lockInterruptibly();</span><br><span class="line">                        } <span class="keyword">catch</span> (InterruptedException e) {</span><br><span class="line">                            System.out.println(<span class="string">&quot;Interrupted&quot;</span>);</span><br><span class="line">                        }</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">        , <span class="string">&quot;thread-interrupt&quot;</span>);</span><br><span class="line"></span><br><span class="line">        thd.start();</span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">        thd.interrupt();</span><br><span class="line">        Thread.sleep(<span class="number">234234234</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></p>
-<p>&#x901A;&#x8FC7;jstack&#x89C2;&#x5BDF;&#x7EBF;&#x7A0B;&#x5DF2;&#x7ECF;&#x4E0D;&#x5B58;&#x5728;&#x4E86;&#x3002;<br>&#x8F93;&#x51FA;&#x5982;&#x4E0B;&#xFF1A;<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">About to lock</span><br><span class="line">Interrupted</span><br></pre></td></tr></table></figure></p>
+<p>&#x4E0B;&#x9762;&#x6211;&#x4EEC;&#x6765;&#x5370;&#x8BC1;&#x8FD9;&#x4E2A;&#x60F3;&#x6CD5;&#x3002;</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">CountDownLatch</span><span class="params">(<span class="keyword">int</span> count)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (count &lt; <span class="number">0</span>) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">&quot;count &lt; 0&quot;</span>);</span><br><span class="line">        <span class="keyword">this</span>.sync = <span class="keyword">new</span> Sync(count);</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Sync(<span class="keyword">int</span> count) {</span><br><span class="line">            setState(count);</span><br><span class="line">        }</span><br></pre></td></tr></table></figure>
+<p>&#x8FD9;&#x6837;&#x5C31;&#x8BC1;&#x660E;&#x4E86;&#x7B2C;&#x4E00;&#x70B9;&#x662F;&#x6210;&#x7ACB;&#x7684;&#x3002;&#x63A5;&#x4E0B;&#x6765;&#x6211;&#x4EEC;&#x770B;&#x7B2C;3&#x70B9;&#x3002;<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">        sync.acquireSharedInterruptibly(<span class="number">1</span>);</span><br><span class="line">    }</span><br></pre></td></tr></table></figure></p>
+<p>&#x8FD9;&#x91CC;sync&#x4E5F;&#x662F;&#x7EE7;&#x627F;&#x4E86;AQS&#xFF0C;&#x6211;&#x4EEC;&#x63A5;&#x4E0B;&#x6765;&#x770B;&#x91CC;&#x9762;&#x3002;<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">acquireSharedInterruptibly</span><span class="params">(<span class="keyword">int</span> arg)</span></span><br><span class="line">            <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">        <span class="keyword">if</span> (Thread.interrupted())</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InterruptedException();</span><br><span class="line">        <span class="keyword">if</span> (tryAcquireShared(arg) &lt; <span class="number">0</span>)</span><br><span class="line">            doAcquireSharedInterruptibly(arg);</span><br><span class="line">    }</span><br></pre></td></tr></table></figure></p>
+<p>&#x5148;&#x6765;&#x770B;&#x770B;&#x65B9;&#x6CD5;tryAcquireShared(arg)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">tryAcquireShared</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> (getState() == <span class="number">0</span>) ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">        }</span><br></pre></td></tr></table></figure></p>
+<p>&#x5982;&#x679C;state&#x4E3A;0&#xFF0C;&#x5373;&#x5F53;&#x524D;&#x9501;&#x4E0D;&#x88AB;&#x6301;&#x6709;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x8FD4;&#x56DE;1, &#x53CD;&#x4E4B;&#x8FD4;&#x56DE;-1&#x3002;&#x6211;&#x4EEC;&#x6765;&#x770B;&#x770B;&#x8FD4;&#x56DE;-1&#x7684;&#x65F6;&#x5019;&#x8C03;&#x7528;doAcquireSharedInterruptibly(arg)&#x505A;&#x4E86;&#x4EC0;&#x4E48;&#x3002;<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doAcquireSharedInterruptibly</span><span class="params">(<span class="keyword">int</span> arg)</span></span><br><span class="line">	<span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">	<span class="comment">//&#x8FD9;&#x91CC;&#x5C06;Node.SHARED&#x52A0;&#x5165;next waiter.</span></span><br><span class="line">	<span class="keyword">final</span> Node node = addWaiter(Node.SHARED);</span><br><span class="line">	<span class="keyword">boolean</span> failed = <span class="keyword">true</span>;</span><br><span class="line">	<span class="keyword">try</span> {</span><br><span class="line">	    <span class="keyword">for</span> (;;) {</span><br><span class="line">		<span class="keyword">final</span> Node p = node.predecessor();</span><br><span class="line">		<span class="keyword">if</span> (p == head) {</span><br><span class="line">			<span class="comment">//&#x5982;&#x679C;&#x524D;&#x4E00;&#x4E2A;&#x8282;&#x70B9;&#x662F;&#x5171;&#x4EAB;&#x7684;&#xFF0C;&#x4F1A;&#x5C1D;&#x8BD5;&#x83B7;&#x53D6;&#x3002;</span></span><br><span class="line">		    <span class="keyword">int</span> r = tryAcquireShared(arg);</span><br><span class="line">		    <span class="keyword">if</span> (r &gt;= <span class="number">0</span>) {</span><br><span class="line">			<span class="comment">//&#x8FD9;&#x91CC;&#x4F1A;&#x628A;&#x5F53;&#x524D;&#x8282;&#x70B9;&#x8BBE;&#x6210;head&#xFF0C;&#x7136;&#x540E;&#x4F20;&#x64AD;&#x7ED9;&#x6240;&#x6709;next waiter&#x4E3A;Node.SHARED&#x7684;&#x8282;&#x70B9;&#x3002;</span></span><br><span class="line">			setHeadAndPropagate(node, r);</span><br><span class="line">			p.next = <span class="keyword">null</span>; <span class="comment">// help GC</span></span><br><span class="line">			failed = <span class="keyword">false</span>;</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		    }</span><br><span class="line">		}</span><br><span class="line">		<span class="keyword">if</span> (shouldParkAfterFailedAcquire(p, node) &amp;&amp;</span><br><span class="line">		    parkAndCheckInterrupt())</span><br><span class="line">		    <span class="keyword">throw</span> <span class="keyword">new</span> InterruptedException();</span><br><span class="line">	    }</span><br><span class="line">	} <span class="keyword">finally</span> {</span><br><span class="line">	    <span class="keyword">if</span> (failed)</span><br><span class="line">		cancelAcquire(node);</span><br><span class="line">	}</span><br><span class="line">}</span><br></pre></td></tr></table></figure></p>
+<p>&#x6211;&#x4EEC;&#x518D;&#x6765;&#x770B;&#x7B2C;&#x4E8C;&#x70B9;&#x3002;<br>&#x8FD9;&#x91CC;&#x5C06;state - 1&#x3002;&#x5177;&#x4F53;&#x7EC6;&#x8282;&#x4E0D;&#x7EC6;&#x6570;&#x4E86;&#x3002;</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">releaseShared</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (tryReleaseShared(arg)) {</span><br><span class="line">            doReleaseShared();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
 
         
         </div>
@@ -247,7 +247,7 @@
 
 </div>
 
-    <a data-url="http://www.iyu.io/2016/05/29/Lock中的各种lock方法/" data-id="ciosgh31400058g0xssc8q4om" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://www.iyu.io/2016/05/29/CountDownLatch的实现分析/" data-id="ciosgh30s00008g0xedugdapa" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -315,7 +315,7 @@
 
             
     
-        <a href="/2016/05/29/Lock中的各种lock方法/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="/2016/05/29/Lock中的各种lock方法/">Comments</a>
+        <a href="/2016/05/29/CountDownLatch的实现分析/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="/2016/05/29/CountDownLatch的实现分析/">Comments</a>
     
 
         </footer>
@@ -324,19 +324,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2016/05/29/解析AbstractQueuedSynchronizer的实现/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">Newer</strong>
-            <div class="article-nav-title">
-                
-                    解析AbstractQueuedSynchronizer的实现
-                
-            </div>
-        </a>
     
-    
-        <a href="/2016/05/29/Java中的Atomic/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2016/05/29/解析AbstractQueuedSynchronizer的实现/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">Older</strong>
-            <div class="article-nav-title">Java中的Atomic</div>
+            <div class="article-nav-title">解析AbstractQueuedSynchronizer的实现</div>
         </a>
     
 </nav>
@@ -537,7 +528,7 @@
     var disqus_shortname = 'iyuli';
     
     
-    var disqus_url = 'http://www.iyu.io/2016/05/29/Lock中的各种lock方法/';
+    var disqus_url = 'http://www.iyu.io/2016/05/29/CountDownLatch的实现分析/';
     
     (function() {
     var dsq = document.createElement('script');

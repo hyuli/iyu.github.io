@@ -149,7 +149,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                6
+                7
                 <span>posts</span>
             </div>
             <div class="article-info-block">
@@ -181,6 +181,150 @@
 
             
             <section id="main">
+    <article id="post-CountDownLatch的实现分析" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2016/05/29/CountDownLatch的实现分析/">CountDownLatch的实现分析</a>
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/05/29/CountDownLatch的实现分析/">
+            <time datetime="2016-05-29T10:03:51.000Z" itemprop="datePublished">2016-05-29</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/Java-Concurrency/">Java Concurrency</a>
+    </div>
+
+                    
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Java-Concurrency/">Java Concurrency</a>
+    </div>
+
+                </div>
+            </header>
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>&#x6709;&#x4E86;&#x4E0A;&#x7BC7;&#x6587;&#x7AE0;&#x7684;&#x5206;&#x6790;&#xFF0C;&#x6211;&#x4EEC;&#x5927;&#x6982;&#x53EF;&#x4EE5;&#x731C;&#x60F3;CountDownLatch&#x662F;&#x5982;&#x4F55;&#x5B9E;&#x73B0;&#x7684;&#x3002;</p>
+<ol>
+<li>&#x9996;&#x5148;&#x770B;&#x6784;&#x9020;&#x51FD;&#x6570; <code>public CountDownLatch(int count)</code>, &#x8FD9;&#x91CC;count&#x4F1A;&#x8BBE;&#x5230;AQS&#x7684;state&#x4E0A;&#x3002;</li>
+<li>&#x7136;&#x540E;&#x5C31;&#x662F;<code>public void countDown()</code>, &#x4F1A;&#x628A;state - 1&#xFF0C;&#x4ECE;&#x4E0A;&#x7BC7;&#x6587;&#x7AE0;&#x4E2D;&#x5F97;&#x77E5;&#xFF0C;state&#x4E0D;&#x5230;0&#x7684;&#x8BDD;&#x9501;&#x4E0D;&#x4F1A;&#x88AB;&#x91CA;&#x653E;&#x3002;</li>
+<li>&#x6700;&#x540E;&#x662F;<code>public void await()</code>&#xFF0C;&#x8C03;&#x7528;&#x8FD9;&#x4E2A;&#x51FD;&#x6570;&#x4F1A;&#x963B;&#x585E;&#x5F53;&#x524D;&#x8FDB;&#x7A0B;&#xFF0C;&#x731C;&#x60F3;&#x5176;&#x5E94;&#x8BE5;&#x662F;park&#x6765;&#x5B9E;&#x73B0;&#x7684;&#x3002;</li>
+</ol>
+<p>&#x4E0B;&#x9762;&#x6211;&#x4EEC;&#x6765;&#x5370;&#x8BC1;&#x8FD9;&#x4E2A;&#x60F3;&#x6CD5;&#x3002;</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">CountDownLatch</span><span class="params">(<span class="keyword">int</span> count)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (count &lt; <span class="number">0</span>) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">&quot;count &lt; 0&quot;</span>);</span><br><span class="line">        <span class="keyword">this</span>.sync = <span class="keyword">new</span> Sync(count);</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Sync(<span class="keyword">int</span> count) {</span><br><span class="line">            setState(count);</span><br><span class="line">        }</span><br></pre></td></tr></table></figure>
+<p>&#x8FD9;&#x6837;&#x5C31;&#x8BC1;&#x660E;&#x4E86;&#x7B2C;&#x4E00;&#x70B9;&#x662F;&#x6210;&#x7ACB;&#x7684;&#x3002;&#x63A5;&#x4E0B;&#x6765;&#x6211;&#x4EEC;&#x770B;&#x7B2C;3&#x70B9;&#x3002;<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">        sync.acquireSharedInterruptibly(<span class="number">1</span>);</span><br><span class="line">    }</span><br></pre></td></tr></table></figure></p>
+<p>&#x8FD9;&#x91CC;sync&#x4E5F;&#x662F;&#x7EE7;&#x627F;&#x4E86;AQS&#xFF0C;&#x6211;&#x4EEC;&#x63A5;&#x4E0B;&#x6765;&#x770B;&#x91CC;&#x9762;&#x3002;<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">acquireSharedInterruptibly</span><span class="params">(<span class="keyword">int</span> arg)</span></span><br><span class="line">            <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">        <span class="keyword">if</span> (Thread.interrupted())</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InterruptedException();</span><br><span class="line">        <span class="keyword">if</span> (tryAcquireShared(arg) &lt; <span class="number">0</span>)</span><br><span class="line">            doAcquireSharedInterruptibly(arg);</span><br><span class="line">    }</span><br></pre></td></tr></table></figure></p>
+<p>&#x5148;&#x6765;&#x770B;&#x770B;&#x65B9;&#x6CD5;tryAcquireShared(arg)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">tryAcquireShared</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> (getState() == <span class="number">0</span>) ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">        }</span><br></pre></td></tr></table></figure></p>
+<p>&#x5982;&#x679C;state&#x4E3A;0&#xFF0C;&#x5373;&#x5F53;&#x524D;&#x9501;&#x4E0D;&#x88AB;&#x6301;&#x6709;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x8FD4;&#x56DE;1, &#x53CD;&#x4E4B;&#x8FD4;&#x56DE;-1&#x3002;&#x6211;&#x4EEC;&#x6765;&#x770B;&#x770B;&#x8FD4;&#x56DE;-1&#x7684;&#x65F6;&#x5019;&#x8C03;&#x7528;doAcquireSharedInterruptibly(arg)&#x505A;&#x4E86;&#x4EC0;&#x4E48;&#x3002;<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doAcquireSharedInterruptibly</span><span class="params">(<span class="keyword">int</span> arg)</span></span><br><span class="line">	<span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">	<span class="comment">//&#x8FD9;&#x91CC;&#x5C06;Node.SHARED&#x52A0;&#x5165;next waiter.</span></span><br><span class="line">	<span class="keyword">final</span> Node node = addWaiter(Node.SHARED);</span><br><span class="line">	<span class="keyword">boolean</span> failed = <span class="keyword">true</span>;</span><br><span class="line">	<span class="keyword">try</span> {</span><br><span class="line">	    <span class="keyword">for</span> (;;) {</span><br><span class="line">		<span class="keyword">final</span> Node p = node.predecessor();</span><br><span class="line">		<span class="keyword">if</span> (p == head) {</span><br><span class="line">			<span class="comment">//&#x5982;&#x679C;&#x524D;&#x4E00;&#x4E2A;&#x8282;&#x70B9;&#x662F;&#x5171;&#x4EAB;&#x7684;&#xFF0C;&#x4F1A;&#x5C1D;&#x8BD5;&#x83B7;&#x53D6;&#x3002;</span></span><br><span class="line">		    <span class="keyword">int</span> r = tryAcquireShared(arg);</span><br><span class="line">		    <span class="keyword">if</span> (r &gt;= <span class="number">0</span>) {</span><br><span class="line">			<span class="comment">//&#x8FD9;&#x91CC;&#x4F1A;&#x628A;&#x5F53;&#x524D;&#x8282;&#x70B9;&#x8BBE;&#x6210;head&#xFF0C;&#x7136;&#x540E;&#x4F20;&#x64AD;&#x7ED9;&#x6240;&#x6709;next waiter&#x4E3A;Node.SHARED&#x7684;&#x8282;&#x70B9;&#x3002;</span></span><br><span class="line">			setHeadAndPropagate(node, r);</span><br><span class="line">			p.next = <span class="keyword">null</span>; <span class="comment">// help GC</span></span><br><span class="line">			failed = <span class="keyword">false</span>;</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		    }</span><br><span class="line">		}</span><br><span class="line">		<span class="keyword">if</span> (shouldParkAfterFailedAcquire(p, node) &amp;&amp;</span><br><span class="line">		    parkAndCheckInterrupt())</span><br><span class="line">		    <span class="keyword">throw</span> <span class="keyword">new</span> InterruptedException();</span><br><span class="line">	    }</span><br><span class="line">	} <span class="keyword">finally</span> {</span><br><span class="line">	    <span class="keyword">if</span> (failed)</span><br><span class="line">		cancelAcquire(node);</span><br><span class="line">	}</span><br><span class="line">}</span><br></pre></td></tr></table></figure></p>
+<p>&#x6211;&#x4EEC;&#x518D;&#x6765;&#x770B;&#x7B2C;&#x4E8C;&#x70B9;&#x3002;<br>&#x8FD9;&#x91CC;&#x5C06;state - 1&#x3002;&#x5177;&#x4F53;&#x7EC6;&#x8282;&#x4E0D;&#x7EC6;&#x6570;&#x4E86;&#x3002;</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">releaseShared</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (tryReleaseShared(arg)) {</span><br><span class="line">            doReleaseShared();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://www.iyu.io/2016/05/29/CountDownLatch的实现分析/" data-id="ciosgh30s00008g0xedugdapa" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+        <a href="/2016/05/29/CountDownLatch的实现分析/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="/2016/05/29/CountDownLatch的实现分析/">Comments</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-解析AbstractQueuedSynchronizer的实现" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -260,7 +404,7 @@
 
 </div>
 
-    <a data-url="http://www.iyu.io/2016/05/29/解析AbstractQueuedSynchronizer的实现/" data-id="ciosbwo2o0002y90xgz9q11r5" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://www.iyu.io/2016/05/29/解析AbstractQueuedSynchronizer的实现/" data-id="ciosgh31900088g0xo0queqn8" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -402,7 +546,7 @@
 
 </div>
 
-    <a data-url="http://www.iyu.io/2016/05/29/Lock中的各种lock方法/" data-id="ciosbwo2w0006y90xq7gsrbzj" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://www.iyu.io/2016/05/29/Lock中的各种lock方法/" data-id="ciosgh31400058g0xssc8q4om" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -545,7 +689,7 @@
 
 </div>
 
-    <a data-url="http://www.iyu.io/2016/05/29/Java中的Atomic/" data-id="ciosbwo270000y90xew9oj22y" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://www.iyu.io/2016/05/29/Java中的Atomic/" data-id="ciosgh30y00028g0xay4dwdb4" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -691,7 +835,7 @@
 
 </div>
 
-    <a data-url="http://www.iyu.io/2016/05/25/运行tomcat7源代码（Tomcat源代码学习之一）/" data-id="ciosbwo35000ay90xqqvcikoo" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://www.iyu.io/2016/05/25/运行tomcat7源代码（Tomcat源代码学习之一）/" data-id="ciosgh31j000f8g0x8x2irv9y" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -840,7 +984,7 @@
 
 </div>
 
-    <a data-url="http://www.iyu.io/2016/05/25/在Mac-Mini-2014下安装Ubuntu-16-04/" data-id="ciosbwo310008y90x7iv06baj" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://www.iyu.io/2016/05/25/在Mac-Mini-2014下安装Ubuntu-16-04/" data-id="ciosgh31c000b8g0xxgxjwbi2" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -961,7 +1105,7 @@
 
 </div>
 
-    <a data-url="http://www.iyu.io/2016/04/15/hello-world/" data-id="ciosbwo3c000dy90xcmda4c5c" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://www.iyu.io/2016/04/15/hello-world/" data-id="ciosgh31600068g0xxpg7l9b7" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1051,6 +1195,25 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2016/05/29/CountDownLatch的实现分析/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Java-Concurrency/">Java Concurrency</a></p>
+                            <p class="item-title"><a href="/2016/05/29/CountDownLatch的实现分析/" class="title">CountDownLatch的实现分析</a></p>
+                            <p class="item-date"><time datetime="2016-05-29T10:03:51.000Z" itemprop="datePublished">2016-05-29</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2016/05/29/解析AbstractQueuedSynchronizer的实现/" class="thumbnail">
     
     
@@ -1124,25 +1287,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/05/25/在Mac-Mini-2014下安装Ubuntu-16-04/" class="thumbnail">
-    
-    
-        <span style="background-image:url(/2016/05/25/&amp;#x5728;Mac-Mini-2014&amp;#x4E0B;&amp;#x5B89;&amp;#x88C5;Ubuntu-16-04/logoUbuntu.jpg)" alt="在Mac Mini 2014下安装Ubuntu 16.04" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/linux/">linux</a></p>
-                            <p class="item-title"><a href="/2016/05/25/在Mac-Mini-2014下安装Ubuntu-16-04/" class="title">在Mac Mini 2014下安装Ubuntu 16.04</a></p>
-                            <p class="item-date"><time datetime="2016-05-24T16:07:19.000Z" itemprop="datePublished">2016-05-25</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1152,7 +1296,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">categories</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Concurrency/">Java Concurrency</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Concurrency/">Java Concurrency</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -1161,7 +1305,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -1170,7 +1314,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">tags</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Install/">Install</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-Concurrency/">Java Concurrency</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tomcat/">Tomcat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/">Ubuntu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Install/">Install</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-Concurrency/">Java Concurrency</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tomcat/">Tomcat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/">Ubuntu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
