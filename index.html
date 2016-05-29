@@ -149,7 +149,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                4
+                5
                 <span>posts</span>
             </div>
             <div class="article-info-block">
@@ -181,6 +181,148 @@
 
             
             <section id="main">
+    <article id="post-Lock中的各种lock方法" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2016/05/29/Lock中的各种lock方法/">Lock中的各种lock方法</a>
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/05/29/Lock中的各种lock方法/">
+            <time datetime="2016-05-29T07:00:33.000Z" itemprop="datePublished">2016-05-29</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/Java-Concurrency/">Java Concurrency</a>
+    </div>
+
+                    
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Java-Concurrency/">Java Concurrency</a>
+    </div>
+
+                </div>
+            </header>
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>&#x5982;&#x56FE;&#xFF0C;&#x5728;Lock&#x7C7B;&#x4E2D;&#x6709;&#x8FD9;&#x4E48;&#x591A;lock&#x65B9;&#x6CD5;&#xFF0C;&#x4ED6;&#x4EEC;&#x5206;&#x522B;&#x6709;&#x4EC0;&#x4E48;&#x533A;&#x522B;&#x5462;&#x3002;</p>
+<ol>
+<li>lock(), &#x6BD4;&#x8F83;&#x6D41;&#x6C13;&#x7684;&#x65B9;&#x5F0F;&#xFF0C;&#x4E00;&#x76F4;&#x5C1D;&#x8BD5;&#x53BB;&#x83B7;&#x53D6;&#x9501;&#xFF0C;&#x4E0D;&#x54CD;&#x5E94;interrupt().</li>
+<li>tryLock(), &#x9A6C;&#x4E0A;&#x8FD4;&#x56DE;&#xFF0C;&#x62FF;&#x5230;&#x9501;&#x5C31;&#x8FD4;&#x56DE;true&#xFF0C;&#x5426;&#x5219;false&#x3002;</li>
+<li>tryLock(long time, TimeUnit unit)&#xFF0C;&#x6BD4;&#x8F83;&#x806A;&#x660E;&#x7684;&#x65B9;&#x5F0F;&#xFF0C;&#x4F1A;&#x7B49;&#x5F85;&#x4E00;&#x6BB5;&#x65F6;&#x95F4;&#xFF0C;&#x8D85;&#x65F6;&#x5C31;&#x8FD4;&#x56DE;false&#x3002;</li>
+<li>lockInterruptibly(), &#x5982;&#x679C;&#x7EBF;&#x7A0B;&#x963B;&#x585E;&#x65F6;&#xFF0C;&#x6536;&#x5230;interrupt&#x4F1A;&#x88AB;&#x5524;&#x9192;&#x5E76;&#x8981;&#x6C42;&#x53BB;&#x5904;&#x7406;interrupt exception.</li>
+</ol>
+<p>&#x4E0B;&#x9762;&#x5BF9;lock()&#x548C;lockInterruptibly()&#x4F5C;&#x4EE5;&#x4E0B;&#x6D4B;&#x8BD5;&#x3002;</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestInterrupt</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">        <span class="keyword">final</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">        lock.lock();</span><br><span class="line"></span><br><span class="line">        Thread thd = <span class="keyword">new</span> Thread(</span><br><span class="line">                <span class="keyword">new</span> Runnable() {</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">                            System.out.println(<span class="string">&quot;About to lock&quot;</span>);</span><br><span class="line">                            lock.lock();</span><br><span class="line">                            System.out.println(<span class="string">&quot;lock aquired&quot;</span>);</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">        , <span class="string">&quot;thread-interrupt&quot;</span>);</span><br><span class="line"></span><br><span class="line">        thd.start();</span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">        thd.interrupt();</span><br><span class="line">        Thread.sleep(<span class="number">234234234</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>&#x901A;&#x8FC7;jstack&#x89C2;&#x5BDF;<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;thread-interrupt&quot;</span> prio=<span class="number">5</span> tid=<span class="number">0x00007fc9898db800</span> nid=<span class="number">0x4d03</span> waiting on condition [<span class="number">0x0000700001149000</span>]</span><br><span class="line">   java.lang.Thread.State: WAITING (parking)</span><br><span class="line">        at sun.misc.Unsafe.park(Native Method)</span><br><span class="line">        - parking to wait <span class="keyword">for</span>  &lt;<span class="number">0x00000007d5660778</span>&gt; (a java.util.concurrent.locks.ReentrantLock$NonfairSync)</span><br><span class="line">        at java.util.concurrent.locks.LockSupport.park(LockSupport.java:<span class="number">186</span>)</span><br><span class="line">        at java.util.concurrent.locks.AbstractQueuedSynchronizer.parkAndCheckInterrupt(AbstractQueuedSynchronizer.java:<span class="number">834</span>)</span><br><span class="line">        at java.util.concurrent.locks.AbstractQueuedSynchronizer.acquireQueued(AbstractQueuedSynchronizer.java:<span class="number">867</span>)</span><br><span class="line">        at java.util.concurrent.locks.AbstractQueuedSynchronizer.acquire(AbstractQueuedSynchronizer.java:<span class="number">1197</span>)</span><br><span class="line">        at java.util.concurrent.locks.ReentrantLock$NonfairSync.lock(ReentrantLock.java:<span class="number">214</span>)</span><br><span class="line">        at java.util.concurrent.locks.ReentrantLock.lock(ReentrantLock.java:<span class="number">290</span>)</span><br><span class="line">        at com.ulu.io.TestInterrupt$<span class="number">1</span>.run(TestInterrupt.java:<span class="number">21</span>)</span><br><span class="line">        at java.lang.Thread.run(Thread.java:<span class="number">745</span>)</span><br></pre></td></tr></table></figure></p>
+<p>&#x8F93;&#x51FA;&#x5982;&#x4E0B;:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">About to lock</span><br></pre></td></tr></table></figure></p>
+<p>&#x5C06;lock&#x6362;&#x6210;lockInterruptibly&#x540E;:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestInterrupt</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">        <span class="keyword">final</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">        lock.lock();</span><br><span class="line"></span><br><span class="line">        Thread thd = <span class="keyword">new</span> Thread(</span><br><span class="line">                <span class="keyword">new</span> Runnable() {</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">                            System.out.println(<span class="string">&quot;About to lock&quot;</span>);</span><br><span class="line">                        <span class="keyword">try</span> {</span><br><span class="line">                            lock.lockInterruptibly();</span><br><span class="line">                        } <span class="keyword">catch</span> (InterruptedException e) {</span><br><span class="line">                            System.out.println(<span class="string">&quot;Interrupted&quot;</span>);</span><br><span class="line">                        }</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">        , <span class="string">&quot;thread-interrupt&quot;</span>);</span><br><span class="line"></span><br><span class="line">        thd.start();</span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">        thd.interrupt();</span><br><span class="line">        Thread.sleep(<span class="number">234234234</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></p>
+<p>&#x901A;&#x8FC7;jstack&#x89C2;&#x5BDF;&#x7EBF;&#x7A0B;&#x5DF2;&#x7ECF;&#x4E0D;&#x5B58;&#x5728;&#x4E86;&#x3002;<br>&#x8F93;&#x51FA;&#x5982;&#x4E0B;&#xFF1A;<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">About to lock</span><br><span class="line">Interrupted</span><br></pre></td></tr></table></figure></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://www.iyu.io/2016/05/29/Lock中的各种lock方法/" data-id="cios9etgx0009mg0xs0cg5rtf" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+        <a href="/2016/05/29/Lock中的各种lock方法/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="/2016/05/29/Lock中的各种lock方法/">Comments</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-Java中的Atomic" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -246,7 +388,7 @@
 
 </div>
 
-    <a data-url="http://www.iyu.io/2016/05/29/Java中的Atomic/" data-id="ciorzl2xj00007s0xvo40a9s7" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://www.iyu.io/2016/05/29/Java中的Atomic/" data-id="cios9etfc0000mg0xne4hsu8g" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -392,7 +534,7 @@
 
 </div>
 
-    <a data-url="http://www.iyu.io/2016/05/25/运行tomcat7源代码（Tomcat源代码学习之一）/" data-id="ciorzh90n0001790xq83ngxb6" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://www.iyu.io/2016/05/25/运行tomcat7源代码（Tomcat源代码学习之一）/" data-id="cios9etgr0007mg0xzu2vm4fl" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -541,7 +683,7 @@
 
 </div>
 
-    <a data-url="http://www.iyu.io/2016/05/25/在Mac-Mini-2014下安装Ubuntu-16-04/" data-id="ciorzh90q0003790xqpbm1omd" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://www.iyu.io/2016/05/25/在Mac-Mini-2014下安装Ubuntu-16-04/" data-id="cios9eth0000dmg0xs4m7dtqo" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -662,7 +804,7 @@
 
 </div>
 
-    <a data-url="http://www.iyu.io/2016/04/15/hello-world/" data-id="ciorzh8yz0000790x29cckrz4" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://www.iyu.io/2016/04/15/hello-world/" data-id="cios9etgo0005mg0x6i8flhw1" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -752,6 +894,25 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2016/05/29/Lock中的各种lock方法/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Java-Concurrency/">Java Concurrency</a></p>
+                            <p class="item-title"><a href="/2016/05/29/Lock中的各种lock方法/" class="title">Lock中的各种lock方法</a></p>
+                            <p class="item-date"><time datetime="2016-05-29T07:00:33.000Z" itemprop="datePublished">2016-05-29</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2016/05/29/Java中的Atomic/" class="thumbnail">
     
     
@@ -834,7 +995,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">categories</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Concurrency/">Java Concurrency</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Concurrency/">Java Concurrency</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -843,7 +1004,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -852,7 +1013,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">tags</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Install/">Install</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-Concurrency/">Java Concurrency</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tomcat/">Tomcat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/">Ubuntu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Install/">Install</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-Concurrency/">Java Concurrency</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tomcat/">Tomcat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/">Ubuntu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -861,7 +1022,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">tag cloud</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Install/" style="font-size: 10px;">Install</a> <a href="/tags/Java-Concurrency/" style="font-size: 10px;">Java Concurrency</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a>
+            <a href="/tags/Install/" style="font-size: 10px;">Install</a> <a href="/tags/Java-Concurrency/" style="font-size: 20px;">Java Concurrency</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a>
         </div>
     </div>
 
